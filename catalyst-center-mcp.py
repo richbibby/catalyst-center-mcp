@@ -10,9 +10,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 mcp = FastMCP("Catalyst Center MCP")
 
 # Configuration
-CCC_HOST = "https://sandboxdnac.cisco.com"
-CCC_USER = "devnetuser"
-CCC_PWD = "Cisco123!"
+CCC_HOST = "Catalyst Center Server Host/IP"
+CCC_USER = "Catalyst Center Username"
+CCC_PWD = "Catalyst Center Password"
 
 # Authenticate with CCC/DNAC
 @mcp.tool()

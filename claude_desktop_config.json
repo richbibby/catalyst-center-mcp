@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+      "catalyst-center-mcp": {
+        "command": "/Users/rich/dev/ccc_mcp/venv/bin/fastmcp",
+        "args": [
+          "run",
+          "/Users/rich/dev/ccc_mcp/catalyst-center-mcp.py"
+        ]
+      }
+    }
+  }

@@ -12,7 +12,7 @@ A Python-based MCP (Model-Controller-Provider) server for Cisco Catalyst Center 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/catalyst-center-mcp.git
+git clone https://github.com/richbibby/catalyst-center-mcp.git
 cd catalyst-center-mcp
 ```
 
@@ -36,17 +36,36 @@ CCC_USER = "your-username"
 CCC_PWD = "your-password"
 ```
 
-## Usage
+## Usage With Claude Desktop Client
 
-1. Start the MCP server:
-```bash
-python catalyst-center-mcp.py
+1. Configure Claude Desktop to use this MCP server:
+
+- Open Claude Desktop
+- Go to Settings > Developer > Edit Config
+- Add the following configuration file `claude_desktop_config.json`
+
+```  
+{
+  "mcpServers": {
+    "catalyst-center-mcp": {
+      "command": "/Users/rich/dev/ccc_mcp/venv/bin/fastmcp",
+      "args": [
+        "run",
+        "/Users/rich/dev/ccc_mcp/catalyst-center-mcp.py"
+      ]
+    }
+  }
+}
 ```
 
-2. Use the test client to interact with the server:
-```bash
-python test_client.py
-```
+- Replace the path's above to reflect your local environment.
+
+2. Restart Claude Desktop
+
+3. Interact with Claude Desktop:
+
+- Ask Claude to perform actions like "Show me the devices in my Cisco Catalyst Center"
+- Claude will use the MCP server to authenticate and fetch device information
 
 ## Available Tools
 
