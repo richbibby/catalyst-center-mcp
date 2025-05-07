@@ -6,6 +6,7 @@ A Python-based MCP (Model Context Protocol) server for Cisco Catalyst Center (fo
 
 - Authentication with Catalyst Center
 - Device discovery and listing
+- Interface information retrieval
 - Simple and extensible MCP server implementation
 
 ## Installation
@@ -29,11 +30,16 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Update the configuration in `catalyst-center-mcp.py`:
-```python
-CCC_HOST = "your-catalyst-center-host"
-CCC_USER = "your-username"
-CCC_PWD = "your-password"
+1. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+2. Update the `.env` file with your Catalyst Center credentials:
+```env
+CCC_HOST=your-catalyst-center-host
+CCC_USER=your-username
+CCC_PWD=your-password
 ```
 
 ## Usage With Claude Desktop Client
@@ -76,6 +82,7 @@ CCC_PWD = "your-password"
 
 - `authenticate`: Authenticates with Cisco Catalyst Center and returns a token
 - `fetch_devices`: Fetches a list of devices from Cisco Catalyst Center
+- `fetch_interfaces`: Fetches interface information for a specific device
 
 ## Contributing
 
