@@ -77,10 +77,42 @@ CCC_PWD=your-password
 
 ![Claude Desktop with Catalyst Center MCP](images/Claude_1.png)
 
+## Example Questions
+
+Here are some example questions you can ask Claude to interact with your Catalyst Center:
+
+### Device Information
+- "Show me all devices in my network"
+- "List all switches in my network"
+- "What devices are currently unreachable?"
+- "Show me devices with hostname containing 'switch'"
+- "What's the status of device with IP 10.1.1.1?"
+
+### Interface Information
+- "Show me all interfaces for device X"
+- "What interfaces are down on device Y?"
+- "List all Gigabit interfaces on device Z"
+- "Show me interfaces with IP addresses"
+- "What's the status of interface GigabitEthernet1/0/1 on device X?"
+
+### Site Information
+- "Show me all sites in my network"
+- "What devices are in site X?"
+- "List all buildings in my network"
+- "Show me the site hierarchy"
+- "What's the address of site Y?"
+
+### Combined Queries
+- "Show me all devices in site X and their interfaces"
+- "List all down interfaces across all devices"
+- "What devices in building Y have unreachable interfaces?"
+- "Show me the network topology for site Z"
+- "What's the status of all devices in area A?"
 
 ## Available Tools
 
 - `authenticate`: Authenticates with Cisco Catalyst Center and returns a token
+- `fetch_sites`: Fetches a list of sites from Cisco Catalyst Center
 - `fetch_devices`: Fetches a list of devices from Cisco Catalyst Center
 - `fetch_interfaces`: Fetches interface information for a specific device
 

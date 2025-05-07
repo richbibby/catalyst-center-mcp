@@ -1,4 +1,4 @@
-from fastmcp import FastMCP, Tool
+from fastmcp import FastMCP
 import requests
 import urllib3
 import json
