@@ -67,6 +67,11 @@ CCC_PWD = "your-password"
 - Ask Claude to perform actions like "Show me the devices in my Cisco Catalyst Center"
 - Claude will use the MCP server to authenticate and fetch device information
 
+![Claude Desktop with Catalyst Center MCP](images/Claude_2.png)
+
+![Claude Desktop with Catalyst Center MCP](images/Claude_1.png)
+
+
 ## Available Tools
 
 - `authenticate`: Authenticates with Cisco Catalyst Center and returns a token
