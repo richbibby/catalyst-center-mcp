@@ -1,6 +1,6 @@
 # Catalyst Center MCP
 
-A Python-based MCP (Model-Controller-Provider) server for Cisco Catalyst Center (formerly DNA Center) that provides tools for device management and monitoring.
+A Python-based MCP (Model Context Protocol) server for Cisco Catalyst Center (formerly DNA Center) that provides tools for device management and monitoring.
 
 ## Features
 
