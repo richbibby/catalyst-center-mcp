@@ -1,13 +1,19 @@
-# Catalyst Center MCP
+# Catalyst Center MCP Server
 
-A Python-based MCP (Model Context Protocol) server for Cisco Catalyst Center (formerly DNA Center) that provides tools for device management and monitoring.
+A Python-based MCP (Model Context Protocol) server for Cisco Catalyst Center (formerly DNA Center) that provides tools for device management, client information retrieval, and network monitoring.
 
 ## Features
 
-- Authentication with Catalyst Center
-- Device discovery and listing
-- Interface information retrieval
-- Simple and extensible MCP server implementation
+- Secure authentication with Cisco Catalyst Center.
+- Device discovery, listing, and detailed information retrieval.
+- Site information retrieval, including hierarchy and details.
+- Network interface information for specific devices.
+- Client listing with comprehensive filtering options.
+- Detailed client information retrieval by MAC address.
+- Client count retrieval with filtering.
+- Helper tool for API-compatible time range conversion.
+- Implemented using FastMCP for a robust and extensible MCP server.
+- Configuration via `.env` file for easy setup.
 
 ## Installation
 
@@ -48,23 +54,26 @@ CCC_PWD=your-password
 
 - Open Claude Desktop
 - Go to Settings > Developer > Edit Config
-- Add the following configuration file `claude_desktop_config.json`
+- Add the following configuration (adjust paths as needed, see `claude_desktop_config.json` for an example structure):
 
-```  
+```json
 {
   "mcpServers": {
     "catalyst-center-mcp": {
-      "command": "/Users/rich/dev/ccc_mcp/venv/bin/fastmcp",
+      "command": "/path/to/your/venv/bin/fastmcp",
       "args": [
         "run",
-        "/Users/rich/dev/ccc_mcp/catalyst-center-mcp.py"
-      ]
+        "/path/to/your/catalyst-center-mcp/catalyst-center-mcp.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
     }
   }
 }
 ```
-
-- Replace the path's above to reflect your local environment.
+- Replace `/path/to/your/...` with the absolute paths relevant to your local environment.
+- The `PYTHONUNBUFFERED` environment variable is recommended for Stdio transport.
 
 2. Restart Claude Desktop
 
@@ -102,6 +111,14 @@ Here are some example questions you can ask Claude to interact with your Catalys
 - "Show me the site hierarchy"
 - "What's the address of site Y?"
 
+### Client Information
+- "How many clients are currently connected?"
+- "List all wireless clients."
+- "Show me clients connected to SSID 'Corporate-WiFi'."
+- "What are the details for client with MAC address aa:bb:cc:dd:ee:ff?"
+- "Are there any clients with an OS type of 'macOS'?"
+- "List clients active in the last hour."
+
 ### Combined Queries
 - "Show me all devices in site X and their interfaces"
 - "List all down interfaces across all devices"
@@ -111,10 +128,13 @@ Here are some example questions you can ask Claude to interact with your Catalys
 
 ## Available Tools
 
-- `authenticate`: Authenticates with Cisco Catalyst Center and returns a token
-- `fetch_sites`: Fetches a list of sites from Cisco Catalyst Center
-- `fetch_devices`: Fetches a list of devices from Cisco Catalyst Center
-- `fetch_interfaces`: Fetches interface information for a specific device
+- `fetch_devices`: Fetches a list of devices from Cisco Catalyst Center, with filtering options.
+- `fetch_sites`: Fetches a list of sites from Cisco Catalyst Center, returning a compact JSON structure.
+- `fetch_interfaces`: Fetches interface information for a specific device ID.
+- `get_api_compatible_time_range`: Converts natural language time inputs (e.g., "last 24 hours", "yesterday") or specific timestamps into API-compatible epoch millisecond start and end times.
+- `get_clients_list`: Retrieves a list of clients from Cisco Catalyst Center with comprehensive filtering options (e.g., by client type, OS, site, MAC/IP address, SSID). Returns a maximum of 100 clients per call.
+- `get_client_details_by_mac`: Fetches detailed information for a specific client by their MAC address.
+- `get_clients_count`: Retrieves the total count of clients matching specified filters.
 
 ## Contributing
 
@@ -122,4 +142,4 @@ Here are some example questions you can ask Claude to interact with your Catalys
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request 
+5. Open a Pull Request
