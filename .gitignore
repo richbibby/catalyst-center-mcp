@@ -37,3 +37,7 @@ Thumbs.db
 
 # Environment variables
 .env
+
+# Agents
+.clinerules
+memory-bank
