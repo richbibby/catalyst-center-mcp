@@ -86,6 +86,48 @@ CCC_PWD=your-password
 
 ![Claude Desktop with Catalyst Center MCP](images/Claude_1.png)
 
+## Usage With VScode
+
+1. Configure VSCode to use this MCP server:
+
+- Open VScode
+- Open the command pallet : Command + Shift + P in Visual Studio Code on macOS (or Ctrl + Shift + P on Windows and Linux)
+- Type: *MCP: Open User Configuration*
+- Add the following configuration (adjust paths as needed, see `claude_desktop_config.json` for an example structure):
+
+```json
+{
+  "servers": {
+    "catalyst-center-mcp": {
+      "type": "stdio",
+      "command": "/path/to/your/venv/bin/fastmcp",
+      "args": [
+        "run",
+        "/path/to/your/catalyst-center-mcp/catalyst-center-mcp.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}
+```
+- Replace `/path/to/your/...` with the absolute paths relevant to your local environment.
+- The `PYTHONUNBUFFERED` environment variable is recommended for Stdio transport.
+
+2. Restart VSCode
+
+You can also 
+- open the command pallet : Command + Shift + P in Visual Studio Code on macOS (or Ctrl + Shift + P on Windows and Linux)
+- Execute *Developer: Reload Window*
+
+3. Interact in Chat window:
+
+- Ask questions like "Show me the devices in my Cisco Catalyst Center"
+- VSCode will use the MCP server to authenticate and fetch device information
+
+![VSCode with Catalyst Center MCP](images/VSCode.png)
+
 ## Example Questions
 
 Here are some example questions you can ask Claude to interact with your Catalyst Center:
