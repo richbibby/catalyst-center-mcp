@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/richbibby-catalyst-center-mcp-badge.png)](https://mseep.ai/app/richbibby-catalyst-center-mcp)
+
 # Catalyst Center MCP Server
 
 A Python-based MCP (Model Context Protocol) server for Cisco Catalyst Center (formerly DNA Center) that provides tools for device management, client information retrieval, and network monitoring.
