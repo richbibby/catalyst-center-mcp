@@ -38,6 +38,9 @@ _token_lock = asyncio.Lock()
 # - fetch_devices: Fetches a list of devices.
 # - fetch_sites: Fetches a list of sites.
 # - fetch_interfaces: Fetches interface information for a specific device.
+# - get_network_health: Overall network health (Assurance / Intent API).
+# - get_site_health: Site-level health summary (Assurance / Intent API).
+# - get_client_health: Wired/wireless client health summary (Assurance / Intent API).
 # - get_clients_list: Retrieves the list of clients with filtering and sorting.
 # - get_client_details_by_mac: Retrieves specific client information by MAC address.
 # - get_clients_count: Retrieves the total count of clients with filtering.
@@ -295,6 +298,76 @@ async def fetch_interfaces(device_id: str) -> str:
     except Exception as e:
         # print(f"DEBUG: Error in fetch_interfaces (device: {device_id}): {str(e)}") # Optional
         raise Exception(f"Error fetching interfaces for device {device_id}: {str(e)}")
+
+
+async def _intent_v1_get_json(endpoint: str, params: Optional[Dict[str, Any]] = None) -> str:
+    """GET `{CCC_HOST}/dna/intent/api/v1/{endpoint}` with auth and 401 retry; returns full JSON body as string."""
+    url = f"{CCC_HOST}/dna/intent/api/v1/{endpoint}"
+    query = {k: v for k, v in (params or {}).items() if v is not None}
+    try:
+        token = await get_or_refresh_token()
+        headers = {"X-Auth-Token": token, "Accept": "application/json"}
+        response = requests.get(url, headers=headers, params=query or None, verify=False)
+        if response.status_code == 200:
+            return json.dumps(response.json(), indent=2)
+        if response.status_code == 401:
+            global _current_token
+            async with _token_lock:
+                _current_token = None
+            token = await get_or_refresh_token()
+            headers["X-Auth-Token"] = token
+            response = requests.get(url, headers=headers, params=query or None, verify=False)
+            if response.status_code == 200:
+                return json.dumps(response.json(), indent=2)
+            raise Exception(
+                f"Failed GET {endpoint} after token refresh. Status: {response.status_code}, Body: {response.text}"
+            )
+        raise Exception(f"Failed GET {endpoint}. Status: {response.status_code}, Body: {response.text}")
+    except Exception as e:
+        if str(e).startswith("Failed GET") or str(e).startswith("Error calling"):
+            raise
+        raise Exception(f"Error calling GET /dna/intent/api/v1/{endpoint}: {str(e)}")
+
+
+@mcp.tool()
+async def get_network_health(timestamp: Optional[int] = None) -> str:
+    """
+    Returns overall network health by device category (Access, Distribution, Core, Router, Wireless, etc.),
+    including health scores and good/fair/bad counts. Documented for Cisco Catalyst Center 2.3.7.x (Intent API).
+
+    API: GET /dna/intent/api/v1/network-health
+    Optional query parameter `timestamp`: UTC time in epoch milliseconds for a specific snapshot; omit for latest.
+
+    Complements `fetch_devices` (reachability/collection status) with Assurance-style health scoring.
+    """
+    return await _intent_v1_get_json("network-health", {"timestamp": timestamp})
+
+
+@mcp.tool()
+async def get_site_health(timestamp: Optional[int] = None) -> str:
+    """
+    Returns health status for sites (e.g. areas/buildings), including wired/wireless client health where exposed.
+    Documented for Cisco Catalyst Center 2.3.7.x (Intent API).
+
+    API: GET /dna/intent/api/v1/site-health
+    Optional query parameter `timestamp`: UTC time in epoch milliseconds for a specific snapshot; omit for latest.
+    """
+    return await _intent_v1_get_json("site-health", {"timestamp": timestamp})
+
+
+@mcp.tool()
+async def get_client_health(timestamp: Optional[int] = None) -> str:
+    """
+    Returns client health summary (wired/wireless), typically broken into categories such as good, fair, poor, idle.
+    Documented for Cisco Catalyst Center 2.3.7.x (Intent API).
+
+    API: GET /dna/intent/api/v1/client-health
+    Optional query parameter `timestamp`: UTC time in epoch milliseconds for a specific snapshot; omit for latest.
+
+    For per-client details, use `get_clients_list` or `get_client_details_by_mac` (data API).
+    """
+    return await _intent_v1_get_json("client-health", {"timestamp": timestamp})
+
 
 # ---- Helper Time Conversion Tool ----
 @mcp.tool()
@@ -896,6 +969,7 @@ if __name__ == "__main__":
     # - fetch_devices: Fetches a list of devices.
     # - fetch_sites: Fetches a list of sites.
     # - fetch_interfaces: Fetches interface information for a specific device.
+    # - get_network_health / get_site_health / get_client_health: Assurance health (Intent API, e.g. 2.3.7.x).
     # - get_clients_list: Retrieves the list of clients with filtering and sorting.
     # - get_client_details_by_mac: Retrieves specific client information by MAC address.
     # - get_clients_count: Retrieves the total count of clients with filtering.
